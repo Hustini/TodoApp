@@ -1,9 +1,19 @@
 package cmd
 
 import (
+	_ "encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
+	// "io/ioutil"
+	_ "os"
 )
+
+func init() {
+	// add command to root
+	rootCmd.AddCommand(inputCmd)
+	// Flag here and Flag in input have to be named the same
+	inputCmd.Flags().StringP("message", "i", "default", "Get a input from the user")
+}
 
 var inputCmd = &cobra.Command{
 	Use:   "input",
@@ -12,12 +22,6 @@ var inputCmd = &cobra.Command{
 		"For example: TodoApp input -i Hello World",
 
 	Run: input,
-}
-
-func init() {
-	rootCmd.AddCommand(inputCmd)
-	// Flag here and Flag in input have to be named the same
-	inputCmd.Flags().StringP("message", "i", "default", "Get a input from the user")
 }
 
 func input(cmd *cobra.Command, args []string) {
