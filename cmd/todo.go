@@ -4,8 +4,8 @@ import (
 	_ "encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
-	// "io/ioutil"
-	_ "os"
+	"io/ioutil"
+	"os"
 )
 
 func test(cmd *cobra.Command, args []string) {
@@ -41,5 +41,12 @@ var showAllCmd = &cobra.Command{
 	Long: "Shows all stored tasks" +
 		"For example: TodoApp showAll",
 
-	Run: test,
+	Run: showAll,
+}
+
+func showAll(cmd *cobra.Command, args []string) {
+	data, _ := os.Open("data.json")
+	bytes, _ := ioutil.ReadAll(data)
+	fmt.Println(string(bytes))
+	defer data.Close()
 }
