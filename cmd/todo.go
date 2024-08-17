@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	_ "encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -45,8 +46,30 @@ var showAllCmd = &cobra.Command{
 }
 
 func showAll(cmd *cobra.Command, args []string) {
+	// Task represents a single task in the JSON
+	type Task struct {
+		ID          int    `json:"id"`
+		Description string `json:"description"`
+		Done        bool   `json:"done"`
+	}
+
+	// TaskList represents the structure of the JSON data
+	type TaskList struct {
+		Tasks []Task `json:"tasks"`
+	}
+
+	// open file and read data in byte slices
 	data, _ := os.Open("data.json")
 	bytes, _ := ioutil.ReadAll(data)
-	fmt.Println(string(bytes))
+
+	// decodes json data
+	var taskList TaskList
+	_ = json.Unmarshal(bytes, &taskList)
+
+	// print
+	for _, task := range taskList.Tasks {
+		fmt.Printf("ID: %d, Description: %s, Done: %t\n", task.ID, task.Description, task.Done)
+	}
+
 	defer data.Close()
 }
