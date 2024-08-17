@@ -1,7 +1,24 @@
 {
   "tasks": [
-    {"id": 0, "description": "Complete project proposal", "done": false},
-    {"id": 1, "description": "Attend team meeting", "done": true},
-    {"id": 2, "description": "Submit expense report", "done": false}
+    {
+      "id": 0,
+      "description": "Complete project proposal",
+      "done": false
+    },
+    {
+      "id": 1,
+      "description": "Attend team meeting",
+      "done": true
+    },
+    {
+      "id": 2,
+      "description": "Submit expense report",
+      "done": false
+    },
+    {
+      "id": 3,
+      "description": "default",
+      "done": false
+    }
   ]
 }

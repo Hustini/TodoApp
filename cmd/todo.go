@@ -98,15 +98,33 @@ func add(cmd *cobra.Command, args []string) {
 		Done        bool   `json:"done"`
 	}
 
+	// TaskList represents the structure of the JSON data
+	type TaskList struct {
+		Tasks []Task `json:"tasks"`
+	}
+
 	// Create a new instance of the struct
-	task := Task{
+	newTask := Task{
 		ID:          id,
 		Description: description,
 		Done:        status,
 	}
 
-	// Marshal the struct to JSON
-	jsonData, _ := json.MarshalIndent(task, "", "  ")
+	// open file and read data in byte slices
+	data, _ := os.Open("data.json")
+	bytes, _ := ioutil.ReadAll(data)
+	defer data.Close()
 
+	// decodes json data
+	var taskList TaskList
+	_ = json.Unmarshal(bytes, &taskList)
+
+	// append value to list
+	taskList.Tasks = append(taskList.Tasks, newTask)
+
+	// Marshal the struct to JSON
+	jsonData, _ := json.MarshalIndent(taskList, "", "  ")
+
+	// write into the file
 	_ = ioutil.WriteFile("data.json", jsonData, 0644)
 }
