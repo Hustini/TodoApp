@@ -17,12 +17,15 @@ func init() {
 	rootCmd.AddCommand(inputCmd)
 	rootCmd.AddCommand(showAllCmd)
 	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(changeStatusCmd)
 	// Flag here and Flag in input have to be named the same
 	inputCmd.Flags().StringP("message", "i", "default", "Get a input from the user")
 	showAllCmd.Flags().StringP("", "", "", "")
 	addCmd.Flags().IntP("id", "i", 3, "Get a id for the task")
 	addCmd.Flags().StringP("description", "d", "default", "Get a description for the task")
 	addCmd.Flags().BoolP("status", "s", false, "Get a status for the task")
+	changeStatusCmd.Flags().IntP("id", "i", 0, "Get a id from the user")
+	changeStatusCmd.Flags().BoolP("status", "s", true, "Get a status for the task")
 }
 
 var inputCmd = &cobra.Command{
@@ -127,4 +130,49 @@ func add(cmd *cobra.Command, args []string) {
 
 	// write into the file
 	_ = ioutil.WriteFile("data.json", jsonData, 0644)
+}
+
+var changeStatusCmd = &cobra.Command{
+	Use:   "changeStatus",
+	Short: "change the status of the task",
+	Long: "You can change status of the task to either true or false depending on if the task is done or not" +
+		"For example: TodoApp changeStatus -i 3 -s true",
+
+	Run: changeStatus,
+}
+
+func changeStatus(cmd *cobra.Command, args []string) {
+	id, _ := cmd.Flags().GetInt("id")
+	// status, _ := cmd.Flags().GetBool("status")
+
+	type Task struct {
+		ID          int    `json:"id"`
+		Description string `json:"description"`
+		Done        bool   `json:"done"`
+	}
+
+	// TaskList represents the structure of the JSON data
+	type TaskList struct {
+		Tasks []Task `json:"tasks"`
+	}
+
+	// open file and read data in byte slices
+	data, _ := os.Open("data.json")
+	bytes, _ := ioutil.ReadAll(data)
+	defer data.Close()
+
+	// decodes json data
+	var taskList TaskList
+	_ = json.Unmarshal(bytes, &taskList)
+
+	// find the task which needs to be changed
+	var taskToChange Task
+	for i := 0; i < len(taskList.Tasks); i++ {
+		if taskList.Tasks[i].ID == id {
+			taskToChange = taskList.Tasks[i]
+			fmt.Println(taskToChange)
+		} else {
+			fmt.Println("not found")
+		}
+	}
 }
