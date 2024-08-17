@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/json"
-	_ "encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"io/ioutil"
@@ -17,9 +16,13 @@ func init() {
 	// add command to root
 	rootCmd.AddCommand(inputCmd)
 	rootCmd.AddCommand(showAllCmd)
+	rootCmd.AddCommand(addCmd)
 	// Flag here and Flag in input have to be named the same
 	inputCmd.Flags().StringP("message", "i", "default", "Get a input from the user")
 	showAllCmd.Flags().StringP("", "", "", "")
+	addCmd.Flags().IntP("id", "i", 3, "Get a id for the task")
+	addCmd.Flags().StringP("description", "d", "default", "Get a description for the task")
+	addCmd.Flags().BoolP("status", "s", false, "Get a status for the task")
 }
 
 var inputCmd = &cobra.Command{
@@ -72,4 +75,21 @@ func showAll(cmd *cobra.Command, args []string) {
 	}
 
 	defer data.Close()
+}
+
+var addCmd = &cobra.Command{
+	Use:   "add",
+	Short: "add a task",
+	Long: "add a task that get written in the json file" +
+		"For example: TodoApp add -i 3 -d Hello World -s false",
+
+	Run: add,
+}
+
+func add(cmd *cobra.Command, args []string) {
+	id, _ := cmd.Flags().GetInt("id")
+	description, _ := cmd.Flags().GetString("description")
+	status, _ := cmd.Flags().GetBool("status")
+
+	fmt.Println(id, description, status)
 }
