@@ -91,5 +91,22 @@ func add(cmd *cobra.Command, args []string) {
 	description, _ := cmd.Flags().GetString("description")
 	status, _ := cmd.Flags().GetBool("status")
 
-	fmt.Println(id, description, status)
+	// Task represents a single task in the JSON
+	type Task struct {
+		ID          int    `json:"id"`
+		Description string `json:"description"`
+		Done        bool   `json:"done"`
+	}
+
+	// Create a new instance of the struct
+	task := Task{
+		ID:          id,
+		Description: description,
+		Done:        status,
+	}
+
+	// Marshal the struct to JSON
+	jsonData, _ := json.MarshalIndent(task, "", "  ")
+
+	_ = ioutil.WriteFile("data.json", jsonData, 0644)
 }
