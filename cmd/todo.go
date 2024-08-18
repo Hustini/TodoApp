@@ -170,8 +170,15 @@ func changeStatus(cmd *cobra.Command, args []string) {
 		if taskList.Tasks[i].ID == id {
 			taskList.Tasks[i].Done = status
 			fmt.Println(taskList.Tasks)
+			break
 		} else {
 			fmt.Println("not found")
 		}
 	}
+
+	// Marshal the struct to JSON
+	jsonData, _ := json.MarshalIndent(taskList, "", "  ")
+
+	// write into the file
+	_ = ioutil.WriteFile("data.json", jsonData, 0644)
 }
