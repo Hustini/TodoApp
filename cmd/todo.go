@@ -143,7 +143,7 @@ var changeStatusCmd = &cobra.Command{
 
 func changeStatus(cmd *cobra.Command, args []string) {
 	id, _ := cmd.Flags().GetInt("id")
-	// status, _ := cmd.Flags().GetBool("status")
+	status, _ := cmd.Flags().GetBool("status")
 
 	type Task struct {
 		ID          int    `json:"id"`
@@ -166,11 +166,10 @@ func changeStatus(cmd *cobra.Command, args []string) {
 	_ = json.Unmarshal(bytes, &taskList)
 
 	// find the task which needs to be changed
-	var taskToChange Task
 	for i := 0; i < len(taskList.Tasks); i++ {
 		if taskList.Tasks[i].ID == id {
-			taskToChange = taskList.Tasks[i]
-			fmt.Println(taskToChange)
+			taskList.Tasks[i].Done = status
+			fmt.Println(taskList.Tasks)
 		} else {
 			fmt.Println("not found")
 		}
