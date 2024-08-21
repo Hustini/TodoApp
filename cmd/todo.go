@@ -130,6 +130,8 @@ func add(cmd *cobra.Command, args []string) {
 
 	// write into the file
 	_ = ioutil.WriteFile("data.json", jsonData, 0644)
+
+	fmt.Println("Task added")
 }
 
 var changeStatusCmd = &cobra.Command{
